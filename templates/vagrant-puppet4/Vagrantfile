@@ -21,7 +21,7 @@ Vagrant.configure(2) do |config|
                       inline: "apt-get -y install software-properties-common"
 
   # install puppet modules we need
-  config.vm.provision "shell", inline: <<-SHELL
+  config.vm.provision "install-puppet-modules", type: "shell", inline: <<-SHELL
     for puppet_module in puppetlabs-apt; do
       puppet module install "\${puppet_module}"
     done
