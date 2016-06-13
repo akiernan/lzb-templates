@@ -1,7 +1,7 @@
 class vagrant {
   Class['apt::update'] -> Package <| provider == 'apt' |>
 
-  $packages = lookup('packages', Array[String], 'unique', [])
+  $packages = hiera_array('packages', [])
   package { $packages:
     ensure => present
   }
