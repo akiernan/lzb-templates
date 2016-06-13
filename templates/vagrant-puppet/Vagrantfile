@@ -1,0 +1,44 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "<%= configVmBox %>"
+
+  config.ssh.forward_agent = true
+
+  # http://foo-o-rama.com/vagrant--stdin-is-not-a-tty--fix.html
+  config.vm.provision "fix-no-tty", type: "shell", privileged: false,
+                      path: "vagrant/fix-no-tty.sh"
+
+  # from https://github.com/hashicorp/puppet-bootstrap
+  config.vm.provision "puppet-install", type: "shell",
+                      env: {:PUPPET_COLLECTION => '',
+                            :DEBIAN_FRONTEND => 'noninteractive'},
+                      path: "vagrant/ubuntu.sh"
+
+  # this dependency is missing from puppetlabs-apt
+  config.vm.provision "shell", env: {:DEBIAN_FRONTEND => 'noninteractive'},
+                      inline: "apt-get -y install software-properties-common"
+
+  # https://tickets.puppetlabs.com/browse/PUP-2566
+  config.vm.provision "shell", inline: "sed -i -e '/templatedir/d' /etc/puppet/puppet.conf"
+
+  # install puppet modules we need
+  config.vm.provision "shell", inline: <<-SHELL
+    for puppet_module in puppetlabs-apt; do
+      puppet module install "\${puppet_module}"
+    done
+  SHELL
+
+  # finally run puppet
+  config.vm.provision "puppet" do |puppet|
+    puppet.hiera_config_path = "puppet/environments/vagrant/hiera.yaml"
+    puppet.manifest_file = 'site.pp'
+    puppet.manifests_path = 'puppet/environments/vagrant/manifests'
+    puppet.options = '--parser future'
+    puppet.working_directory = '/tmp/vagrant-puppet/environments'
+
+    puppet.environment = "vagrant"
+    puppet.environment_path = "puppet/environments"
+  end
+end
