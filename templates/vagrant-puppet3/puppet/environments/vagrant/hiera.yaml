@@ -1,9 +1,0 @@
----
-:backends:
-  - yaml
-
-:yaml:
-  :datadir: "%{::environment}/hieradata"
-
-:hierarchy:
-  - "common"
