@@ -4,8 +4,6 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "{{ configVmBox }}"
 
-  config.ssh.forward_agent = true
-
   # http://foo-o-rama.com/vagrant--stdin-is-not-a-tty--fix.html
   config.vm.provision "fix-no-tty", type: "shell", privileged: false,
                       path: "vagrant/fix-no-tty.sh"
