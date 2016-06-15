@@ -1,4 +1,6 @@
 class vagrant {
+  include apt
+
   Class['apt::update'] -> Package <| provider == 'apt' |>
 
 {{#puppetCollection}}
