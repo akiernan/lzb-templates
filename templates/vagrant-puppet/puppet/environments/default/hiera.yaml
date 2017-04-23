@@ -1,17 +1,19 @@
 ---
 {{#puppetCollection}}
-version: 4
-datadir: "hieradata"
+version: 5
+defaults:
+  datadir: "data"
+  data_hash: yaml_data
 hierarchy:
   - name: "common"
-    backend: yaml
+    path: "common.yaml"
 {{/puppetCollection}}
 {{^puppetCollection}}
 :backends:
   - yaml
 
 :yaml:
-  :datadir: "%{::environment}/hieradata"
+  :datadir: "%{::environment}/data"
 
 :hierarchy:
   - "common"
