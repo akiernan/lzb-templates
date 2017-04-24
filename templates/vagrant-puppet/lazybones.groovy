@@ -27,6 +27,7 @@ if (props.usePuppetCollection) {
 props.configVmBox = ask("Define value for 'config.vm.box' [${defaultBox}]: ", defaultBox, "configVmBox")
 
 processTemplates "Vagrantfile", props
+processTemplates "**/Puppetfile", props
 processTemplates "**/environment.conf", props
 processTemplates "**/hiera.yaml", props
 processTemplates "**/*.pp", props

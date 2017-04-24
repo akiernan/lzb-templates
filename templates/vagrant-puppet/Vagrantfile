@@ -1,8 +1,23 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# from https://github.com/blinkreaction/boot2docker-vagrant/blob/master/Vagrantfile
+plugins = %w{vagrant-r10k}
+need_restart = false
+plugins.each do |plugin|
+  unless Vagrant.has_plugin?(plugin)
+    system "vagrant plugin install #{plugin}"
+    need_restart = true
+  end
+end
+exec('vagrant', *ARGV) if need_restart
+
 Vagrant.configure(2) do |config|
   config.vm.box = "{{ configVmBox }}"
+
+  config.r10k.puppet_dir = "puppet/environments/default"
+  config.r10k.puppetfile_path = "puppet/environments/default/Puppetfile"
+  config.r10k.module_path = "puppet/environments/default/modules"
 
   # http://foo-o-rama.com/vagrant--stdin-is-not-a-tty--fix.html
   config.vm.provision "fix-no-tty", type: "shell", privileged: false,
@@ -25,12 +40,6 @@ Vagrant.configure(2) do |config|
                       type: "shell",
                       inline: "sed -i -e '/templatedir/d' /etc/puppet/puppet.conf"
 {{/puppetCollection}}
-  # install puppet modules we need
-  config.vm.provision "install-puppet-modules", type: "shell", inline: <<-SHELL
-    for puppet_module in puppetlabs-apt; do
-      puppet module install "${puppet_module}"
-    done
-  SHELL
 
   # finally run puppet
   config.vm.provision "puppet" do |puppet|
@@ -39,9 +48,12 @@ Vagrant.configure(2) do |config|
     puppet.manifest_file = 'site.pp'
     puppet.manifests_path = 'puppet/environments/default/manifests'
     puppet.options = '--parser future'
-    puppet.working_directory = '/tmp/vagrant-puppet/environments'
+    puppet.module_path = ['puppet/environments/default/site',
+                          'puppet/environments/default/modules']
 {{/puppetCollection}}
+{{#puppetCollection}}
     puppet.environment = "default"
     puppet.environment_path = "puppet/environments"
+{{/puppetCollection}}
   end
 end
