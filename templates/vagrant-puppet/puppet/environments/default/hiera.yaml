@@ -1,5 +1,5 @@
 ---
-{{#puppetCollection}}
+{{~#puppetCollection}}
 version: 5
 defaults:
   datadir: "data"
@@ -7,8 +7,8 @@ defaults:
 hierarchy:
   - name: "common"
     path: "common.yaml"
-{{/puppetCollection}}
-{{^puppetCollection}}
+{{~/puppetCollection}}
+{{~^puppetCollection}}
 :backends:
   - yaml
 
@@ -17,4 +17,4 @@ hierarchy:
 
 :hierarchy:
   - "common"
-{{/puppetCollection}}
+{{~/puppetCollection}}

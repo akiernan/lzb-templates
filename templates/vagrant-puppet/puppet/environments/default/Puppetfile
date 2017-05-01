@@ -3,9 +3,9 @@ mod 'puppetlabs-stdlib',
     :tag => "4.16.0"
 mod 'puppetlabs-apt',
     :git => "git://github.com/puppetlabs/puppetlabs-apt.git",
-{{#puppetCollection}}
+{{~#puppetCollection}}
     :tag => "3.0.0"
-{{/puppetCollection}}
-{{^puppetCollection}}
+{{~/puppetCollection}}
+{{~^puppetCollection}}
     :tag => "2.4.0"
-{{/puppetCollection}}
+{{~/puppetCollection}}
