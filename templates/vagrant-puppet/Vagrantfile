@@ -6,11 +6,11 @@ plugins = %w{vagrant-r10k}
 need_restart = false
 plugins.each do |plugin|
   unless Vagrant.has_plugin?(plugin)
-    system "vagrant plugin install #{plugin}"
+    system "#{$0} plugin install #{plugin}"
     need_restart = true
   end
 end
-exec('vagrant', *ARGV) if need_restart
+exec($0, *ARGV) if need_restart
 
 Vagrant.configure(2) do |config|
   config.vm.box = "{{ configVmBox }}"
