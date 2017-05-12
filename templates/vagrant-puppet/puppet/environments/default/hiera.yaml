@@ -13,7 +13,7 @@ hierarchy:
   - yaml
 
 :yaml:
-  :datadir: "%{::environment}/data"
+  :datadir: "/tmp/vagrant-puppet/environments/%{::environment}/data"
 
 :hierarchy:
   - "common"

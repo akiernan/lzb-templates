@@ -47,9 +47,7 @@ Vagrant.configure(2) do |config|
     puppet.module_path = ['puppet/environments/default/site',
                           'puppet/environments/default/modules']
 {{~/puppetCollection}}
-{{~#puppetCollection}}
     puppet.environment = "default"
     puppet.environment_path = "puppet/environments"
-{{~/puppetCollection}}
   end
 end
